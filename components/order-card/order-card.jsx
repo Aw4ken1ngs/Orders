@@ -1,8 +1,10 @@
 import React from "react";
 import { Card, green, Text, Image, Col, Row, Spacer, Container } from "@nextui-org/react";
 import Mix from "@/images/mix.jpg"
-import 'boxicons'
-
+import { CheckSquareIcon } from "@/images/icon/check-square-icon";
+import { XSquareIcon } from "@/images/icon/x-square-icon";
+import { BankIcon } from "@/images/icon/bank-icon";
+import { CalendarCheckIcon } from "@/images/icon/calendar-check-icon";
 
 export const OrderCard = () => {
   return (
@@ -33,21 +35,21 @@ export const OrderCard = () => {
         </Col>
         <Text css={{ d: 'flex', ai: 'center' }}>
           Статус:
-          <box-icon name='check-square' type='solid' color='green'></box-icon>
-          <box-icon name='x-square' type='solid' color='red'></box-icon>
+          <CheckSquareIcon color='green'/>
+          <XSquareIcon color='red'/>
         </Text>
       </Card.Body>
       <Card.Footer css={{ pt: '0px' }}>
         <Row>
           <Col>
             <Text color='gray' css={{ d: 'flex', ai: 'center', jc: 'center' }}>
-              <box-icon type='solid' name='bank' color='gray'></box-icon>
+              <BankIcon color='grey'/>
               Оплата: 26.06
             </Text>
           </Col>
           <Col>
             <Text color='gray' css={{ d: 'flex', ai: 'center', jc: 'center' }}>
-              <box-icon name='calendar-check' type='solid' color='gray'></box-icon>
+              <CalendarCheckIcon color='grey'/>
               Срок: 30.06
             </Text>
           </Col>
