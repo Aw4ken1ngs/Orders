@@ -7,18 +7,18 @@ import 'boxicons'
 export const OrderCard = () => {
   return (
     <Card css={{ mw: '333px', ml: '80px', mt: '115px' }}>
-      <Card.Header css={{ ai: 'start'}}>
+      <Card.Header css={{ ai: 'start' }}>
         <Image
           src={Mix.src}
           width='50px'
           height='50px'
           alt='Кирпич микс'
-          containerCss={{ m: '0px', pt: '20px', pl: '20px', pb: '0px'}}
+          containerCss={{ m: '0px', pt: '20px', pl: '20px', pb: '0px' }}
         />
       </Card.Header>
-      <Card.Body css={{p: '0px', pl: '20px'}}>
+      <Card.Body css={{ p: '0 20px 0 20px' }}>
         <Col>
-          <Text h3 color="gray" css={{ta: 'center', pb: '0px'}}>
+          <Text h3 color="gray" css={{ ta: 'center', pb: '0px' }}>
             Заказ 1 Тольятти
           </Text>
           <Text weight="bold">
@@ -31,26 +31,27 @@ export const OrderCard = () => {
             212шт. углов Микс
           </Text>
         </Col>
-        <Text css={{d: 'flex', ai: 'center'}}>
-          Статус: 
+        <Text css={{ d: 'flex', ai: 'center' }}>
+          Статус:
           <box-icon name='check-square' type='solid' color='green'></box-icon>
           <box-icon name='x-square' type='solid' color='red'></box-icon>
         </Text>
       </Card.Body>
-      <Card.Footer >
-        {/* <Row >
-          <Text color='gray' css={{d: 'flex', ai: 'center'}}>
-          <box-icon type='solid' name='bank' color='gray'></box-icon>
-            Оплата: 26.06
-          </Text>
-        </Row>
+      <Card.Footer css={{ pt: '0px' }}>
         <Row>
-          <Text color='gray' css={{d: 'flex', ai: 'center'}}>
-          <box-icon name='calendar-check' type='solid' color='gray'></box-icon>
-            Срок: 30.06
-          </Text>
-        </Row> */}
-        <Text>dadsfdsa</Text>
+          <Col>
+            <Text color='gray' css={{ d: 'flex', ai: 'center', jc: 'center' }}>
+              <box-icon type='solid' name='bank' color='gray'></box-icon>
+              Оплата: 26.06
+            </Text>
+          </Col>
+          <Col>
+            <Text color='gray' css={{ d: 'flex', ai: 'center', jc: 'center' }}>
+              <box-icon name='calendar-check' type='solid' color='gray'></box-icon>
+              Срок: 30.06
+            </Text>
+          </Col>
+        </Row>
       </Card.Footer>
     </Card>);
 
