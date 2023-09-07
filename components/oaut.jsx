@@ -78,18 +78,14 @@ export const Oaut = (props) => {
   async function listMajors() {
     console.log("dssvds")
     let response;
+
     try {
-      // Fetch first 10 files
       response = await gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: '1UXtPgQQASZE4D9pkxQxJPkLkSghtbJWi5EiVmOB5M9E',
         range: "'Долги по заказам'!A1:K",
       });
-      console.log("response", response)
-      console.log("props", props)
-      
-      props.onOrdersloaded(response.rusult.values);
-      console.log('->', props.onOrdersloaded(response.rusult.values));
-     
+
+      props.onOrdersloaded(response.result.values);
     } catch (err) {
       setContent(err.message);
       return;
@@ -129,6 +125,7 @@ export const Oaut = (props) => {
       {authorizeButton && <button onClick={handleAuthClick}>Authorize</button>}
       {signOutButton && <button onClick={handleSignoutClick}>Sign Out</button>}
 
+      <div>{content}</div>
       <pre id="content" style={{ whiteSpace: 'pre-wrap' }}></pre>
       <Script
         src="https://apis.google.com/js/api.js"

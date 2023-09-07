@@ -10,13 +10,14 @@ export default function Home() {
 
   const [order, setOrder] = useState([]);
 
-const onOrdersloaded = (loadedOrder) => {
-  setOrder(loadedOrder)
+const onOrdersLoaded = (loadedOrder) => {
+    console.log('loadedOrder', loadedOrder);
+    setOrder(loadedOrder)
 }
 
   return (
     <>
-      <Oaut onOrdersloaded={onOrdersloaded}/>
+      <Oaut onOrdersloaded={onOrdersLoaded}/>
       <MainInput />
       <OrderCard order={order}/>
     </>
