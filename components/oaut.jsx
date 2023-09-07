@@ -88,7 +88,7 @@ export const Oaut = (props) => {
       console.log("props", props)
       
       props.onOrdersloaded(response.rusult.values);
-      console.log('->', props.onOrdersloaded(response.rusult.values));
+      console.log('->', props.onOrdersloaded(response.result.values));
      
     } catch (err) {
       setContent(err.message);
