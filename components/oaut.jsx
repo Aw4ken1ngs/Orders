@@ -1,8 +1,10 @@
+import {error} from "next/dist/build/output/log";
 import Script from 'next/script';
 import React,{ useEffect, useState } from 'react';
 
 
 let tokenClient = null;
+let client = null;
 let gapiInited = false;
 let gisInited = false;
 const CLIENT_ID = '445389393504-965rm4qnvov159r3ek9h3sbva5et2pa4.apps.googleusercontent.com';
@@ -18,7 +20,8 @@ export const Oaut = (props) => {
 
 
   const handleAuthClick = () => {
-    tokenClient.callback = async (resp) => {
+    client.requestCode();
+/*    tokenClient.callback = async (resp) => {
       if (resp.error !== undefined) {
         throw (resp);
       }
@@ -34,7 +37,7 @@ export const Oaut = (props) => {
     } else {
       // Skip display of account chooser and consent dialog for an existing session.
       tokenClient.requestAccessToken({ prompt: '' });
-    }
+    }*/
   }
   const handleSignoutClick = () => {
     const token = gapi.client.getToken();
@@ -52,12 +55,49 @@ export const Oaut = (props) => {
     }
   }
 
+  function initClient() {
+    client = google.accounts.oauth2.initCodeClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      ux_mode: 'popup',
+      callback: (response) => {
+        // http://localhost:3000/api/auth/code
+        console.log('super response 23', response);
+
+        fetch(`/api/auth/code?code=${response.code}`, {
+          method: "GET"
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          console.log('data', data)
+        }).catch(error => {
+          console.log('error', error);
+        });
+        /*        var code_receiver_uri = 'YOUR_AUTHORIZATION_CODE_ENDPOINT_URI',
+                    // Send auth code to your backend platform
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', code_receiver_uri, true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.onload = function() {
+                  console.log('Signed in as: ' + xhr.responseText);
+                };
+                xhr.send('code=' + response.code);*/
+        // After receipt, the code is exchanged for an access token and
+        // refresh token, and the platform then updates this web app
+        // running in user's browser with the requested calendar info.
+      },
+    });
+  }
+
   function gisLoaded() {
-    tokenClient = google.accounts.oauth2.initTokenClient({
+    initClient();
+/*    tokenClient = google.accounts.oauth2.initTokenClient({
       client_id: CLIENT_ID,
       scope: SCOPES,
       callback: '', // defined later
     });
+    */
     gisInited = true;
     maybeEnableButtons();
   }
@@ -101,6 +141,11 @@ export const Oaut = (props) => {
       'Name, Major:\n');
     setContent(output)
   }
+
+  const fetchOrders = () => {
+    gapi.client.setToken({access_token: 'ya29.a0AfB_byAuLThOE5C7L34XPyEp5dXswMMxPShrD04Gt0WA_2Ut35dS88ewB920vpQQCKY0gsiVn1hWvvNnXcwOjRh7WVWRfvYJg_LH47bSXL1TdHjL17b-PsFxClZS6hHA6gVNp9ToOBK-Vxu-TxoTa1YjgVys4AoN31KZhAaCgYKAeISARMSFQHsvYlsGBS5bbcl33m1pmJHOxwzDQ0173'});
+    listMajors();
+  }
  
 
   const AuthButton = () => {
@@ -122,6 +167,7 @@ export const Oaut = (props) => {
   return (
     <>
 
+      <button onClick={fetchOrders}>fetch</button>
       {authorizeButton && <button onClick={handleAuthClick}>Authorize</button>}
       {signOutButton && <button onClick={handleSignoutClick}>Sign Out</button>}
 
