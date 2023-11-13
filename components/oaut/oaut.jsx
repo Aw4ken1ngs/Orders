@@ -111,48 +111,48 @@ export const Oaut = (props) => {
     maybeEnableButtons();
   }
 
-  //Функция getDataGoogleSheets для получения данных из Google Sheets с использованием API и обновления значений на основе полученных данных.
-  async function fetchRetry(cb, failCb, limit) {
-    let attempts = 0;
-    let retryCount = 0; 
-    console.log("Starting...")
+  //Функция fetchRetry для получения данных из Google Sheets с использованием API и обновления значений на основе полученных данных.
+  // async function fetchRetry(cb, failCb, limit) {
+  //   let attempts = 0;
+  //   let retryCount = 0; 
+  //   console.log("Starting...")
 
-    while (attempts < limit) {
-      try {
-        cb();
-        return;
-      } catch (err) {
-        if (err.status == 401 && retryCount < 3) {
+  //   while (attempts < limit) {
+  //     try {
+  //       cb();
+  //       return;
+  //     } catch (err) {
+  //       if (err.status == 401 && retryCount < 3) {
 
-          console.log('-----------------', err.status)
-          await failCb();
-          await cb();
-          retryCount++;
-          attempts++;
-        } else {
-          setContent(err.message);
-          console.log(err)
-        }
-      }
-      return;
-    }
+  //         console.log('-----------------', err.status)
+  //         await failCb();
+  //         await cb();
+  //         retryCount++;
+  //         attempts++;
+  //       } else {
+  //         setContent(err.message);
+  //         console.log(err)
+  //       }
+  //     }
+  //     return;
+  //   }
 
 
-    const range = response.result;
-    if (!range || !range.values || range.values.length == 0) {
-      setContent('No values found.');
-      return;
-    }
-    const output = range.values.reduce(
-      (str, row) => `${str}${row[0]}, ${row[4]}\n`,
-      'Name, Major:\n');
-    setContent(output)
-    return;
-  }
+  //   const range = response.result;
+  //   if (!range || !range.values || range.values.length == 0) {
+  //     setContent('No values found.');
+  //     return;
+  //   }
+  //   const output = range.values.reduce(
+  //     (str, row) => `${str}${row[0]}, ${row[4]}\n`,
+  //     'Name, Major:\n');
+  //   setContent(output)
+  //   return;
+  // }
 
   // Функция fetchOrders для установки токена доступа и вызова функции getDataGoogleSheets.
   const fetchOrders = async () => {
-    gapi.client.setToken({ access_token: localStorage.getItem('access_token') })
+    //gapi.client.setToken({ access_token: localStorage.getItem('access_token') })
 
     const response = await gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: '1UXtPgQQASZE4D9pkxQxJPkLkSghtbJWi5EiVmOB5M9E',
@@ -162,19 +162,18 @@ export const Oaut = (props) => {
     props.onOrdersloaded(response.result.values);
   }
 
-  fetchRetry(() => {
-    fetchOrders()
-  }, 
-  () => {
-   getRefreshToken()
-  }, 5)
+  // fetchRetry(() => {
+  //   fetchOrders()
+  // }, 
+  // () => {
+  //  getRefreshToken()
+  // }, 5)
 
   return (
     <div className={styles.container}>
       <ButtonGroup>
         <Button color='primary' onClick={fetchOrders}>Обновить</Button>
         {(authorizeButton && !isUserAuthorized) && <Button color='primary' onClick={handleAuthClick}>Авторизироваться</Button>}
-        <Button color='primary' onClick={handleAuthClick}>Авторизироваться2</Button>
         <Button color='primary' onClick={handleSignoutClick}>Выйти</Button>
         <pre id="content" style={{ whiteSpace: 'pre-wrap' }}></pre>
       </ButtonGroup>
