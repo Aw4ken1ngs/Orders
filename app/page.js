@@ -1,8 +1,9 @@
 'use client'
-import {Oaut} from '@/components/oaut';
+import {Oaut} from '@/components/oaut/oaut';
 import { OrderCard } from '@/components/order-card/order-card';
-import { MainInput } from '@/components/main-input';
 import React,{ useEffect, useState } from 'react';
+import { ToolBar } from '@/components/toolbar/toolbar';
+
 
 
 
@@ -15,10 +16,17 @@ const onOrdersLoaded = (loadedOrder) => {
     setOrder(loadedOrder)
 }
 
+const [newOrder, setNewOrder] = useState(null);
+
+const onOrderCreated = (createdOrder) => {
+  console.log('Created order', createdOrder);
+  setNewOrder(createdOrder);
+}
+
   return (
     <>
-      <Oaut onOrdersloaded={onOrdersLoaded}/>
-      <MainInput />
+      <Oaut onOrdersloaded={onOrdersLoaded} newOrder={newOrder}/>
+      <ToolBar onOrderCreated={onOrderCreated}/>
       <OrderCard order={order}/>
     </>
   )

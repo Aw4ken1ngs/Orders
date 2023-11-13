@@ -1,132 +1,46 @@
 import React from "react";
-import { Card, green, Text, Image, Col, Row, Spacer, Container, Grid, } from "@nextui-org/react";
-import { CheckSquareIcon } from "@/images/icon/check-square-icon";
-import { XSquareIcon } from "@/images/icon/x-square-icon";
-import { BankIcon } from "@/images/icon/bank-icon";
-import { CalendarCheckIcon } from "@/images/icon/calendar-check-icon";
 import { mapOrders } from "@/utils/utils";
+import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
+import styles from './order-card.module.css';
+
 
 export const OrderCard = (props) => {
   let OrderItems = mapOrders(props.order);
-console.log('тест',props)
-  // const OrderItems = [
-  //   {
-  //     number: 1,
-  //     src: Mix.src,
-  //     city: 'Тольятти',
-  //     brick: '1000шт Кирпич микс',
-  //     tile: '25м2 плитка микс ',
-  //     corner: '212шт углы микс',
-  //     dateOfPayment: '26.06',
-  //     readiness: '30.06'
-  //   },
-  //   {
-  //     number: 2,
-  //     src: Starina.src,
-  //     city: 'Самара',
-  //     brick: '1000шт Кирпич под старину',
-  //     tile: '25м2 плитка под старину',
-  //     corner: '212шт углы под старину',
-  //     dateOfPayment: '08.06',
-  //     readiness: '20.06'
-  //   },
-  //   {
-  //     number: 2,
-  //     src: Starina.src,
-  //     city: 'Самара',
-  //     brick: '1000шт Кирпич под старину',
-  //     tile: '25м2 плитка под старину',
-  //     corner: '212шт углы под старину',
-  //     dateOfPayment: '08.06',
-  //     readiness: '20.06'
-  //   },
-  //   {
-  //     number: 2,
-  //     src: Starina.src,
-  //     city: 'Самара',
-  //     brick: '1000шт Кирпич под старину',
-  //     tile: '25м2 плитка под старину',
-  //     corner: '212шт углы под старину',
-  //     dateOfPayment: '08.06',
-  //     readiness: '20.06'
-  //   },
-  //   {
-  //     number: 2,
-  //     src: Starina.src,
-  //     city: 'Самара',
-  //     brick: '1000шт Кирпич под старину',
-  //     tile: '25м2 плитка под старину',
-  //     corner: '212шт углы под старину',
-  //     dateOfPayment: '08.06',
-  //     readiness: '20.06'
-  //   },
-  //   {
-  //     number: 2,
-  //     src: Starina.src,
-  //     city: 'Самара',
-  //     brick: '1000шт Кирпич под старину',
-  //     tile: '25м2 плитка под старину',
-  //     corner: '212шт углы под старину',
-  //     dateOfPayment: '08.06',
-  //     readiness: '20.06'
-  //   }
-  // ]
+  console.log('тест', props)
 
   return (
-    <Grid.Container>
+    <div className={`${styles.container} gap-4 grid grid-cols-2 sm:grid-cols-3`}>
       {OrderItems.map((OrderItem) => {
-        return <Grid key={OrderItem.number}><Card css={{ mw: '333px', ml: '80px', mt: '115px' }}>
-          <Card.Header css={{ ai: 'start' }}>
+        return <Card key={OrderItem.number} className="max-w-[350px] min-w-[250px]">
+          <CardHeader className="flex gap-3">
             <Image
-              src={OrderItem.src}
-              width='50px'
-              height='50px'
-              alt='Кирпич микс'
-              containerCss={{ m: '0px', pt: '20px', pl: '20px', pb: '0px' }}
+              alt="nextui logo"
+              height={40}
+              radius="sm"
+              src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
+              width={40}
             />
-          </Card.Header>
-          <Card.Body css={{ p: '0 20px 0 20px' }}>
-            <Col>
-              <Text h3 color="gray" css={{ ta: 'center', pb: '0px' }}>
-                Заказ: {OrderItem.number} {OrderItem.city}
-              </Text>
-              <Text weight="bold">
-                {OrderItem.brick}
-              </Text>
-              <Text weight="bold">
-                {OrderItem.tile}
-              </Text>
-              <Text weight="bold">
-                {OrderItem.corner}
-              </Text>
-            </Col>
-            <Text css={{ d: 'flex', ai: 'center' }}>
-              Статус:
-              <CheckSquareIcon color='green' />
-              <XSquareIcon color='red' />
-            </Text>
-          </Card.Body>
-          <Card.Footer css={{ pt: '0px' }}>
-            <Row>
-              <Col>
-                <Text color='gray' css={{ d: 'flex', ai: 'center', jc: 'center' }}>
-                  <BankIcon color='grey' />
-                  Оплата: {OrderItem.dateOfPayment}
-                </Text>
-              </Col>
-              <Col>
-                <Text color='gray' css={{ d: 'flex', ai: 'center', jc: 'center' }}>
-                  <CalendarCheckIcon color='grey' />
-                  Срок: {OrderItem.readiness}
-                </Text>
-              </Col>
-            </Row>
-          </Card.Footer>
-        </Card></Grid>
+            <div className="flex flex-col">
+              <p className="text-md">Заказ: {OrderItem.number}</p>
+              <p className="text-small text-default-500">{OrderItem.city}</p>
+            </div>
+          </CardHeader>
+          <Divider />
+          <CardBody>
+            <p>{OrderItem.brick}</p>
+            <p>{OrderItem.tile}</p>
+            <p>-{OrderItem.corner}</p>
+            <p>Статус: -</p>
+          </CardBody>
+          <Divider />
+          <CardFooter>
+            <div className="card-footer">
+              <p>Оплата: {OrderItem.dateOfPayment}</p>
+              <p>Срок: {OrderItem.readiness}</p>
+            </div>
+          </CardFooter>
+        </Card>
       })}
-    </Grid.Container>
+    </div>
   )
 }
-
-
-//AIzaSyA-og7qzrQ-aG8MSDB9jYEMuigHMrr5O2g
