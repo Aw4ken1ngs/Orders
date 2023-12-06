@@ -1,10 +1,9 @@
 import Script from 'next/script';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, createContext } from 'react';
 import { Button, ButtonGroup } from "@nextui-org/react";
 import styles from './oaut.module.css';
 import { createOrder } from '@/services/set-data-google-sheets-api';
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signOut } from 'firebase/auth';
 
 let tokenClient = null;
 let client = null;
@@ -22,6 +21,7 @@ export const Oaut = (props) => {
   const [gapiInited, setGapiInited] = useState(false);
   const [gisInited, setGisInited] = useState(false);
 
+/*
   const firebaseConfig = {
     apiKey: "AIzaSyA-og7qzrQ-aG8MSDB9jYEMuigHMrr5O2g",
     authDomain: "orders-397119.firebaseapp.com",
@@ -31,9 +31,10 @@ export const Oaut = (props) => {
     appId: "1:445389393504:web:1bc4ee9be6782f2d3bbd05",
     measurementId: "G-4JGKNXCYPY"
   };
+*/
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+/*  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);*/
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -48,7 +49,7 @@ export const Oaut = (props) => {
     }
   }, [props.newOrder]);
 
-  useEffect(() => {
+/*  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const accessToken = user.accessToken;
@@ -58,11 +59,11 @@ export const Oaut = (props) => {
       }
     });
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth]);*/
 
-  const isUserAuthorized = useMemo(() => {
+  const isUserAuthorized = true; /*useMemo(() => {
     return Boolean(accessToken);
-  }, [accessToken]);
+  }, [accessToken])*/
 
   // const handleAuthClick = () => {
   //   client.requestCode();
@@ -174,7 +175,7 @@ export const Oaut = (props) => {
         range: "'Долги по заказам'!A2:K",
       });
       
-      props.onOrdersloaded(response.result.values);
+//      props.onOrdersloaded(response.result.values);
       return response;
     } catch (error) {
       console.error('Error fetching orders:', error);

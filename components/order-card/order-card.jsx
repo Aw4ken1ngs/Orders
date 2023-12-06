@@ -19,7 +19,7 @@ export const OrderCard = (props) => {
           </CardHeader>
           <Divider />
           <CardBody>
-            <p>{OrderItem.brick}</p>
+            <p>{OrderItem.brick}, {OrderItem.amount} {OrderItem.unit}</p>
             <p>{OrderItem.tile}</p>
             <p>-{OrderItem.corner}</p>
             <p>Статус: -</p>
