@@ -1,5 +1,6 @@
 // Функция getRefresh для получения и сохранения обновленного токена доступа.
 export async function getRefreshToken() {
+  
   try {
     const usersEmail = localStorage.getItem('email');
     const response = await fetch(`/api/auth/refresh-token?email=${usersEmail}`, {

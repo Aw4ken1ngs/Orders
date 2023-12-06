@@ -1,17 +1,9 @@
 import React from "react";
-import { mapOrders } from "@/utils/utils";
 import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
-import styles from './order-card.module.css';
-
 
 export const OrderCard = (props) => {
-  let OrderItems = mapOrders(props.order);
-  console.log('тест', props)
-
-  return (
-    <div className={`${styles.container} gap-4 grid grid-cols-2 sm:grid-cols-3`}>
-      {OrderItems.map((OrderItem) => {
-        return <Card key={OrderItem.number} className="max-w-[350px] min-w-[250px]">
+  const { OrderItem } = props;
+ return <Card key={props.number} className="max-w-[350px] min-w-[250px]">
           <CardHeader className="flex gap-3">
             <Image
               alt="nextui logo"
@@ -40,7 +32,4 @@ export const OrderCard = (props) => {
             </div>
           </CardFooter>
         </Card>
-      })}
-    </div>
-  )
 }
