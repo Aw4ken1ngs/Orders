@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDi
 import styles from './ToolBar.module.css';
 import { sendMessage } from '@/services/whats-app';
 
-export const ToolBar = ({onOrderCreated}) => {
+export const ToolBar = ({ onOrderCreated }) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -13,23 +13,21 @@ export const ToolBar = ({onOrderCreated}) => {
     productionTime: "", status: ""
   };
   const [order, setOrder] = useState(initialOrder);
-  // const [orders, setOrders] = useState([]);
-console.log('order', setOrder)
+  console.log('order', setOrder)
   const changeHandler = (e) => {
-    setOrder({...order, [e.target.name]: e.target.value});
+    setOrder({ ...order, [e.target.name]: e.target.value });
   };
 
 
   const submitHandler = () => {
     console.log('созданный массив', order)
-    // setOrders([...orders, order]);
     onOrderCreated(order);
     setOrder(initialOrder);
     onOpenChange();
     sendMessage(order);
   };
-  
-  const inputsList = Object.keys(order).map((item, index) => 
+
+  const inputsList = Object.keys(order).map((item, index) =>
     <Input
       key={index}
       clearable
@@ -72,9 +70,9 @@ console.log('order', setOrder)
 }
 
 // const sendMessageToWhatsApp = () => {
-//   const idInstance = '1103871293'; 
-//   const apiTokenInstance = '9f6fae325b5645f19b05fd541acf9ae65a0c35fe5e4b4cfa8c'; 
-//   const chatId = '79277733778@c.us'; 
+//   const idInstance = '1103871293';
+//   const apiTokenInstance = '9f6fae325b5645f19b05fd541acf9ae65a0c35fe5e4b4cfa8c';
+//   const chatId = '79277733778@c.us';
 
 //   const url = `https://api.green-api.com/waInstance${idInstance}/sendMessage/${apiTokenInstance}`;
 

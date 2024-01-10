@@ -1,5 +1,6 @@
 //запись в таблицу google
 export async function createOrder(sheetId, range, data) {
+  gapi.client.setToken({ access_token: localStorage.getItem('access_token') })
   const pendingWrite = await gapi.client.sheets.spreadsheets.values.append({
     spreadsheetId: sheetId,
     range: range,
@@ -8,7 +9,6 @@ export async function createOrder(sheetId, range, data) {
       values: [data],
     },
   });
-
   if (!pendingWrite.result) {
     console.error('Error appending data');
     return false;

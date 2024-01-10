@@ -1,9 +1,11 @@
 import Script from 'next/script';
-import React, { useEffect, useState, useMemo, createContext } from 'react';
+import React, { useEffect, useState, useMemo, createContext, useContext } from 'react';
 import { Button, ButtonGroup } from "@nextui-org/react";
 import styles from './oaut.module.css';
 import { createOrder } from '@/services/set-data-google-sheets-api';
-import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { AuthContext } from '@/contexts/auth-context';
+// import { App } from '../skeleton/skeleton';
 
 let tokenClient = null;
 let client = null;
@@ -11,36 +13,21 @@ const CLIENT_ID = '445389393504-965rm4qnvov159r3ek9h3sbva5et2pa4.apps.googleuser
 const API_KEY = 'AIzaSyA-og7qzrQ-aG8MSDB9jYEMuigHMrr5O2g';
 const SCOPES = 'email profile https://www.googleapis.com/auth/spreadsheets';
 const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
-
 // React-компонент обеспечивает авторизацию пользовател�� с помощью Google Oauth2, полу��ение данных из определенной таблицы Google Sheets и вывод полученных результатов на экран
-export const Oaut = (props) => {
 
+export const Oaut = (props) => {
+  
   const [authorizeButton, setAuthorizeButton] = useState(false);
   const [signOutButton, setSignOutButton] = useState(false);
   const [accessToken, setAccessToken] = useState('');
   const [gapiInited, setGapiInited] = useState(false);
   const [gisInited, setGisInited] = useState(false);
-
-/*
-  const firebaseConfig = {
-    apiKey: "AIzaSyA-og7qzrQ-aG8MSDB9jYEMuigHMrr5O2g",
-    authDomain: "orders-397119.firebaseapp.com",
-    projectId: "orders-397119",
-    storageBucket: "orders-397119.appspot.com",
-    messagingSenderId: "445389393504",
-    appId: "1:445389393504:web:1bc4ee9be6782f2d3bbd05",
-    measurementId: "G-4JGKNXCYPY"
-  };
-*/
-
-/*  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);*/
-
+  
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     setAccessToken(token);
   }, []);
-
+  
   useEffect(() => {
     if (props.newOrder) {
       const data = Object.values(props.newOrder);
@@ -48,27 +35,41 @@ export const Oaut = (props) => {
       console.log('jsdfsafdlksajfsadjflksadjflkdsajflksadjflksadjflksadfslkdfjlsajflsajfladsjfldsafjlsadjfladsjfldsak')
     }
   }, [props.newOrder]);
-
-/*  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const accessToken = user.accessToken;
-        setAccessToken(accessToken);
-      } else {
-        setAccessToken('');
-      }
-    });
-    return () => unsubscribe();
-  }, [auth]);*/
-
-  const isUserAuthorized = true; /*useMemo(() => {
+  
+  const isUserAuthorized = useMemo(() => {
     return Boolean(accessToken);
-  }, [accessToken])*/
-
-  // const handleAuthClick = () => {
-  //   client.requestCode();
-  // }
-
+  }, [accessToken])
+  
+  
+   const { provider, auth } = useContext(AuthContext);
+   console.log(provider, 'provider----------------------' )
+    const signIn = () => {
+      console.log('signIn');
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const credential = GoogleAuthProvider.credentialFromResult(result);
+          const token = credential.accessToken;
+          localStorage.setItem('access_token', token);
+          console.log('credential', credential);
+          // The signed-in user info.
+          const user = result.user;
+          console.log('result', result);
+          // IdP data available using getAdditionalUserInfo(result)
+          // ...
+        }).catch((error) => {
+          // Handle Errors here.
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log('errorMessage', errorMessage);
+          // The email of the user's account used.
+          const email = error.customData.email;
+          // The AuthCredential type that was used.
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // ...
+        });
+    }
+  
   // const handleSignoutClick = () => {
   //   const token = gapi.client.getToken();
 
@@ -79,23 +80,6 @@ export const Oaut = (props) => {
   //     setSignOutButton(false);
   //   }
   // }
-
-  const handleAuthClick = async () => {
-    try {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      await firebase.auth().signInWithPopup(provider);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
-  const handleSignoutClick = async () => {
-    try {
-      await firebase.auth().signOut();
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   function maybeEnableButtons() {
     if (gapiInited && gisInited) {
@@ -148,20 +132,9 @@ export const Oaut = (props) => {
     maybeEnableButtons();
   }
 
-  // const fetchOrders = async () => {
-  //   console.log('fetchOrders23')
-  //   gapi.client.setToken({ access_token: localStorage.getItem('access_token') })
-
-  //   const response = await gapi.client.sheets.spreadsheets.values.get({
-  //     spreadsheetId: '1UXtPgQQASZE4D9pkxQxJPkLkSghtbJWi5EiVmOB5M9E',
-  //     range: "'Долги по заказам'!A2:K",
-  //   });
-  //   props.onOrdersloaded(response.result.values);
-  //   return response;
-  // }
   const fetchOrders = async () => {
     try {
-      console.log('fetchOrders23')
+      console.log('fetchOrders23----------')
       const accessToken = localStorage.getItem('access_token');
       if (!accessToken) {
         console.error('Access token is missing.');
@@ -174,12 +147,10 @@ export const Oaut = (props) => {
         spreadsheetId: '1UXtPgQQASZE4D9pkxQxJPkLkSghtbJWi5EiVmOB5M9E',
         range: "'Долги по заказам'!A2:K",
       });
-      
-//      props.onOrdersloaded(response.result.values);
+
       return response;
     } catch (error) {
       console.error('Error fetching orders:', error);
-      // Обработка ошибки, например, вы можете вывести ошибку в консоль или показать пользователю сообщение
     }
   }
 
@@ -187,10 +158,9 @@ export const Oaut = (props) => {
     <div className={styles.container}>
       <ButtonGroup>
         <Button color='primary' onClick={fetchOrders}>Обновить</Button>
-        {(authorizeButton && !isUserAuthorized) && <Button color='primary' onClick={handleAuthClick}>Авторизироваться</Button>}
-        <Button color='primary' onClick={handleAuthClick}>Авторизироваться</Button>
-        <Button color='primary' onClick={handleSignoutClick}>Выйти</Button>
-
+        {/* {(authorizeButton && !isUserAuthorized) && <Button color='primary' onClick={signIn}>Авторизироваться</Button>} */}
+        {/* <Button color='primary' onClick={handleSignoutClick}>Выйти</Button> */}
+        <Button color='primary' onClick={signIn}>войти </Button>
         <pre id="content" style={{ whiteSpace: 'pre-wrap' }}></pre>
       </ButtonGroup>
       {gapiInited && gisInited ? props.children : <div>Loading...</div>}
@@ -207,3 +177,55 @@ export const Oaut = (props) => {
     </div>
   )
 }
+// import React, { useEffect, useState, useMemo } from 'react';
+// import { Button, ButtonGroup } from "@nextui-org/react";
+// import styles from './oaut.module.css';
+// import { createOrder } from '@/services/set-data-google-sheets-api';
+// import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+// export const Oaut = (props) => {
+  
+//   const [accessToken, setAccessToken] = useState('');
+  
+//   useEffect(() => {
+//     const token = localStorage.getItem('access_token');
+//     setAccessToken(token);
+//   }, []);
+  
+//   useEffect(() => {
+//     if (props.newOrder) {
+//       const data = Object.values(props.newOrder);
+//       createOrder('1UXtPgQQASZE4D9pkxQxJPkLkSghtbJWi5EiVmOB5M9E', "'Долги по заказам'!A2:K", data);
+//     }
+//   }, [props.newOrder]);
+
+//   const isUserAuthorized = useMemo(() => {
+//     return Boolean(accessToken);
+//   }, [accessToken])
+
+//   const auth = getAuth();
+//   const provider = new GoogleAuthProvider();
+//   const signIn = () => {
+//     signInWithPopup(auth, provider)
+//       .then((result) => {
+//         const credential = GoogleAuthProvider.credentialFromResult(result);
+//         const token = credential.accessToken;
+//         localStorage.setItem("access_token", token);
+//         console.log('credential', credential);
+//         const user = result.user;
+//         console.log('result', result);
+//       }).catch((error) => {
+//         console.error('Error during Firebase signIn:', error);
+//       });
+//   }
+
+//   return (
+//     <div className={styles.container}>
+//       <ButtonGroup>
+//         <Button color='primary' onClick={signIn}>Войти</Button>
+//       </ButtonGroup>
+      
+//       {isUserAuthorized ? props.children : <div>Загрузка ...</div>}
+//     </div>
+//   )
+// }
