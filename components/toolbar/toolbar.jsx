@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
 import styles from './ToolBar.module.css';
 import { sendMessage } from '@/services/whats-app';
+import { fetchProduts } from '@/services/products';
+import { InputAutoSuggest } from "../auto-suggest/auto-suggest";
+
 
 export const ToolBar = ({ onOrderCreated }) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  useEffect(() => {
+    fetchProduts().then((res) => {
+      setProducts(res)
+    })
+  }, [])
 
+  const [products, setProducts] = useState([]);
+  
   const initialOrder = {
     city: "", organization: "", nomenclature: "", quantity: "", unit: "",
     amount: "", dateOfPayment: "", formOfPayment: "", area: "",
@@ -17,7 +27,6 @@ export const ToolBar = ({ onOrderCreated }) => {
   const changeHandler = (e) => {
     setOrder({ ...order, [e.target.name]: e.target.value });
   };
-
 
   const submitHandler = () => {
     console.log('созданный массив', order)
@@ -51,6 +60,7 @@ export const ToolBar = ({ onOrderCreated }) => {
             <>
               <ModalHeader className="flex flex-col gap-1">Создание заказа</ModalHeader>
               <ModalBody>
+                
                 {inputsList}
               </ModalBody>
               <ModalFooter>
