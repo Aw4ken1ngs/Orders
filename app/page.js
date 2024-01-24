@@ -3,7 +3,6 @@ import { Oaut } from '@/components/oaut/oaut';
 import { OrdersList } from '@/components/orders-list/orders-list';
 import React, { useState } from 'react';
 import { ToolBar } from '@/components/toolbar/toolbar';
-import { AutoSuggest } from '@/components/auto-suggest/auto-suggest';
 
 
 
@@ -17,9 +16,7 @@ export default function Home() {
   }
   return (
     <>
-      <ToolBar onOrderCreated={onOrderCreated}>
-        <AutoSuggest />
-      </ToolBar>
+      <ToolBar onOrderCreated={onOrderCreated} />
       <Oaut newOrder={newOrder}>
         <OrdersList />
       </Oaut>

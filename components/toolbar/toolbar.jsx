@@ -83,7 +83,6 @@ const products = [
 ];
 
 export const ToolBar = (props) => {
-
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [visible, setVisible] = React.useState(false);
   const [city, setCity] = React.useState("");
@@ -114,26 +113,9 @@ export const ToolBar = (props) => {
   };
 
   const [list, setList] = useState([]);
-  const [inputState, setInputState] = useState('');
-  console.log(inputState, '<-------------')
-  // const onChange = (event) => {
-  //   setInputState(event.target.value)
-  // }
 
-  // const onKeyDown = (event) => {
-  //   if (event.key === 'Enter') {
-  //     setList([...list, event.target.value])
-  //     setInputState('')
-  //   }
-  // }
-
-  const filteredProduct = products.filter(product => {
-    return product.name.toLocaleLowerCase().match(new RegExp(inputState.toLocaleLowerCase()));
-  });
-
-  const addToList = (productName) => {
-    setList([...list, productName])
-    setInputState('')
+  const addToList = (product) => {
+    setList([...list, product])
   }
 
 
@@ -158,24 +140,17 @@ export const ToolBar = (props) => {
                     onChange={(event) => setCity(event.target.value)} />
                   <Input type="text" label="Организация" />
                 </div>
-                <AutoSuggest products={products} onProductSelected={addToList} />
-                {list.length !== 0 ? (<ListboxWrapper>
+                <AutoSuggest onProductSelected={addToList} />
+
+              <ListboxWrapper>
                   <Listbox>
-                    {list.map((item, index) => (
-                      <ListboxItem key={index}>{item}</ListboxItem>
-                    ))}
-                  </Listbox>
-                </ListboxWrapper>) : null}
-                {inputState && <ListboxWrapper>
-                  <Listbox>
-                    {filteredProduct.map((product) => (
-                      <ListboxItem onClick={() => addToList(product.name)} key={product.id}>
+                    {list.map((product) => (
+                      <ListboxItem key={product.id}>
                         {product.name}
                       </ListboxItem>
                     ))}
                   </Listbox>
                 </ListboxWrapper>
-                }
                 <Input
                   clearable
                   bordered
