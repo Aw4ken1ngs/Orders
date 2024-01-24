@@ -5,6 +5,7 @@ import styles from './oaut.module.css';
 import { createOrder } from '@/services/set-data-google-sheets-api';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { AuthContext } from '@/contexts/auth-context';
+import Skeleton from '../skeleton/skeleton';
 // import { App } from '../skeleton/skeleton';
 
 let tokenClient = null;
@@ -163,7 +164,7 @@ export const Oaut = (props) => {
         <Button color='primary' onClick={signIn}>войти </Button>
         <pre id="content" style={{ whiteSpace: 'pre-wrap' }}></pre>
       </ButtonGroup>
-      {gapiInited && gisInited ? props.children : <div>Loading...</div>}
+      {gapiInited && gisInited ? props.children : <Skeleton/>}
       <Script
         src="https://apis.google.com/js/api.js"
         strategy="lazyOnload"
