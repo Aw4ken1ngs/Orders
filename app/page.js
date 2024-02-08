@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 import { ToolBar } from '@/components/toolbar/toolbar';
 
 
-
 export default function Home() {
 
   const [newOrder, setNewOrder] = useState(null);

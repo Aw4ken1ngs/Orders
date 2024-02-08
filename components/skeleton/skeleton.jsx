@@ -1,13 +1,11 @@
 import React from "react";
-import { Progress } from "@nextui-org/react";
+import { CircularProgress } from "@nextui-org/react";
+import styles from "./skeleton.module.css";
 
 export default function Skeleton() {
   return (
-    <Progress
-      size="sm"
-      isIndeterminate
-      aria-label="Loading..."
-      className="max-w-md"
-    />
+    <div className="container">
+      <CircularProgress label="Loading..." />
+    </div>
   );
 }
