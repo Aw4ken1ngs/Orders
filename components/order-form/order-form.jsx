@@ -50,25 +50,52 @@ const statusList = [{
   label: "просрочено", value: "просрочено"
 }];
 
+const ORDER_FORM_INITIAL_STATE = {
+  city: '',
+  organization: '',
+  dateOfPayment: '',
+  formOfPayment: '',
+  status: '',
+  area: '',
+  amount: '',
+  productionTime: '',
+};
+
+
+const FORM_VALIDATION = {
+  city: v => v.length > 1 && /\w/.test(v),
+  organization: Boolean,
+  dateOfPayment: Boolean,
+  formOfPayment: Boolean,
+  status: Boolean,
+  area: Boolean,
+  productionTime: Boolean,
+};
+
+const FORM_ERRORS = {
+  city: 'Заполните поле город',
+  organization: 'Заполните поле организация',
+  dateOfPayment: 'Введите дату платежа',
+  formOfPayment: 'Введите форму оплаты',
+  status: 'Заполните поле статус',
+  area: 'Заполните поле площадка',
+  productionTime: 'Заполните время производства',
+};
+
+
 export const OrderForm = (props) => {
 
+  const [form, setForm] = useState(ORDER_FORM_INITIAL_STATE);
+  const [errors, setErrors] = useState({});
 
   const [visible, setVisible] = React.useState(false);
-  const [city, setCity] = React.useState("");
-  const [organization, setOrganization] = React.useState("");
-  const [nomenclature, setNomenclature] = React.useState("");
-  const [quantity, setQuantity] = React.useState("");
-  const [unit, setUnit] = React.useState("");
-  const [amount, setAmount] = React.useState("");
   const [dateOfPayment, setDateOfPayment] = React.useState("");
-  const [formOfPayment, setFormOfPayment] = React.useState("");
-  const [area, setArea] = React.useState("");
   const [productionTime, setProductionTime] = React.useState("");
-  const [status, setStatus] = React.useState("");
   const [orders, setOrders] = React.useState([]);
   const [productsList, setProductsList] = useState([]);
   const [productQuantity, setProductQuantity] = useState("")
   const [buttonClicked, setButtonClicked] = useState(false);
+  const [list, setList] = useState([]);
 
   useEffect(() => {
     fetchProdutsService().then((data) => {
@@ -84,13 +111,21 @@ export const OrderForm = (props) => {
 
 
   const submitHandler = () => {
-    const newOrder = { city, organization, quantity, unit, amount, dateOfPayment, formOfPayment, area, productionTime, status };
-    console.log('созданный массив', newOrder)
-    setOrders([...orders, newOrder]);
-    closeHandler();
-    // props.onOrderCreated(newOrder);
-    createOrder(newOrder);
-    setButtonClicked(true);
+    const isFormValid = validateForm();
+
+    if (isFormValid) {
+      console.log('Form is Valid');
+/*      const newOrder = form;
+      console.log('созданный массив', newOrder)
+      setOrders([...orders, newOrder]);
+      closeHandler();
+      // props.onOrderCreated(newOrder);
+      createOrder(newOrder);
+      setButtonClicked(true);*/
+    } else {
+      console.log('Form NOT Valid');
+
+    }
   };
 
   const updateList = (id, quantity) => {
@@ -106,10 +141,20 @@ export const OrderForm = (props) => {
     setList(newList)
   }
 
-  const [list, setList] = useState([]);
+
+
   console.log('list23', list)
   const addToList = (product) => {
     setList([...list, { ...product, quantity: 0, sum: 0 }])
+  }
+
+  const handleFormChange = (event) => {
+    //event.target.value // asdasd
+    //event.target.name // <= organization
+    setForm({
+      ...form,
+      [event.target.name]: event.target.value
+    })
   }
 
   const handleInputChange = (event, setState) => {
@@ -127,24 +172,48 @@ export const OrderForm = (props) => {
     }
   };
 
+  console.log('errors23', errors);
+
+  const validateForm = () => {
+    for (let key in form) {
+      if (FORM_VALIDATION[key]) {
+        if (!FORM_VALIDATION[key](form[key])) {
+          setErrors({
+            ...errors,
+            [key]: FORM_ERRORS[key]
+          })
+          return false;
+        }
+      }
+    }
+    return true
+  }
+
+  const a = {
+    b: 'asd'
+  }
+  console.log(a.asdasd);
+
   return (
     <ModalBody>
       <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
         <Input
           type="text"
-          errorMessage={city ? "" : "заполните поле"}
-          isInvalid={buttonClicked && !city}
+          errorMessage={errors.city ? FORM_ERRORS.city : ''}
+          isInvalid={Boolean(errors.city)}
           label="Город"
-          value={city}
-          onChange={(e) => handleInputChange(e, setCity)}
+          name="city"
+          value={form.city}
+          onChange={handleFormChange}
         />
         <Input
           type="text"
-          errorMessage={organization ? "" : "заполните поле"}
-          isInvalid={buttonClicked && !organization}
+          errorMessage={form.organization ? "" : "заполните поле"}
+          isInvalid={buttonClicked && !form.organization}
           label="Организация"
-          value={organization}
-          onChange={(e) => handleInputChange(e, setOrganization)}
+          name="organization"
+          value={form.organization}
+          onChange={handleFormChange}
         />
       </div>
       <AutoSuggest onProductSelected={addToList} items={productsList} />
@@ -192,18 +261,20 @@ export const OrderForm = (props) => {
           className="max-w-[18%]"
           size="lg"
           label="Дата оплаты"
-          value={dateOfPayment}
+          name="dateOfPayment"
+          value={form.dateOfPayment}
           errorMessage={dateOfPayment ? "" : "заполните поле"}
           isInvalid={ buttonClicked && !dateOfPayment}
-          onChange={(e) => handleInputChange(e, setDateOfPayment)}
+          onChange={handleFormChange}
         />
         <Select
-          errorMessage={formOfPayment ? "" : "заполните поле"}
-          isInvalid={ buttonClicked && !formOfPayment}
+          errorMessage={form.formOfPayment ? "" : "заполните поле"}
+          isInvalid={ buttonClicked && !form.formOfPayment}
           label="Форма оплаты"
           className="max-w-[18%]"
-          value={formOfPayment}
-          onChange={(e) => handleInputChange(e, setFormOfPayment)}
+          value={form.formOfPayment}
+          name="formOfPayment"
+          onChange={handleFormChange}
         >
           {formOfPayments.map((formOfPayment) => (
             <SelectItem key={formOfPayment.value} value={formOfPayment.value}>
@@ -212,12 +283,13 @@ export const OrderForm = (props) => {
           ))}
         </Select>
         <Select
-          errorMessage={area ? "" : "заполните поле"}
-          isInvalid={buttonClicked && !area}
+          errorMessage={form.area ? "" : "заполните поле"}
+          isInvalid={buttonClicked && !form.area}
           label="Площадка"
           className="max-w-[18%]"
-          value={area}
-          onChange={(e) => handleInputChange(e, setArea)}
+          value={form.area}
+          name="area"
+          onChange={handleFormChange}
         >
           {areas.map((area) => (
             <SelectItem key={area.value} value={area.value}>
@@ -234,16 +306,18 @@ export const OrderForm = (props) => {
           className="max-w-[18%]"
           size="lg"
           label="Срок"
-          value={productionTime}
-          onChange={(e) => handleInputChange(e, setProductionTime)}
+          value={form.productionTime}
+          name="productionTime"
+          onChange={handleFormChange}
         />
         <Select
-          errorMessage={status ? "" : "заполните поле"}
-          isInvalid={ buttonClicked && !status}
+          errorMessage={form.status ? "" : "заполните поле"}
+          isInvalid={ buttonClicked && !form.status}
           label="Статус"
           className="max-w-[18%]"
-          value={status}
-          onChange={(e) => handleInputChange(e, setStatus)}
+          value={form.status}
+          name="status"
+          onChange={handleFormChange}
         >
           {statusList.map((statusItem) => (
             <SelectItem key={statusItem.value} value={statusItem.value}>
