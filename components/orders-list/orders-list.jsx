@@ -22,16 +22,16 @@ const [orders, setOrders] = useState([]);
     return response;
   }
   
-  // useEffect(() => {
-  //   fetchRetry(async () => {
-  //     await fetchOrders()
-  //   },
-  //     async (err) => {
-  //       if (err.status == 401) {
-  //         return await getRefreshToken()
-  //       }
-  //     }, 5)
-  // }, []);
+  useEffect(() => {
+    fetchRetry(async () => {
+      await fetchOrders()
+    },
+      async (err) => {
+        if (err.status == 401) {
+          return await getRefreshToken()
+        }
+      }, 5)
+  }, []);
 
   return (
     <div className={`${styles.container} gap-4 grid grid-cols-2 sm:grid-cols-3`}>

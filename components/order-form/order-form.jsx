@@ -2,6 +2,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Select
 import { AutoSuggest } from "../auto-suggest/auto-suggest";
 import { fetchProduts as fetchProdutsService } from "@/services/products";
 import React, { useState, useEffect } from "react";
+import { createOrder } from "@/services/order";
 
 const units = [
   {
@@ -49,7 +50,7 @@ const statusList = [{
   label: "просрочено", value: "просрочено"
 }];
 
-export const OrderForm = () => {
+export const OrderForm = (props) => {
 
 
   const [visible, setVisible] = React.useState(false);
@@ -67,6 +68,7 @@ export const OrderForm = () => {
   const [orders, setOrders] = React.useState([]);
   const [productsList, setProductsList] = useState([]);
   const [productQuantity, setProductQuantity] = useState("")
+  const [buttonClicked, setButtonClicked] = useState(false);
 
   useEffect(() => {
     fetchProdutsService().then((data) => {
@@ -86,7 +88,9 @@ export const OrderForm = () => {
     console.log('созданный массив', newOrder)
     setOrders([...orders, newOrder]);
     closeHandler();
-    props.onOrderCreated(newOrder);
+    // props.onOrderCreated(newOrder);
+    createOrder(newOrder);
+    setButtonClicked(true);
   };
 
   const updateList = (id, quantity) => {
@@ -129,7 +133,7 @@ export const OrderForm = () => {
         <Input
           type="text"
           errorMessage={city ? "" : "заполните поле"}
-          isInvalid={!city}
+          isInvalid={buttonClicked && !city}
           label="Город"
           value={city}
           onChange={(e) => handleInputChange(e, setCity)}
@@ -137,7 +141,7 @@ export const OrderForm = () => {
         <Input
           type="text"
           errorMessage={organization ? "" : "заполните поле"}
-          isInvalid={!organization}
+          isInvalid={buttonClicked && !organization}
           label="Организация"
           value={organization}
           onChange={(e) => handleInputChange(e, setOrganization)}
@@ -160,7 +164,7 @@ export const OrderForm = () => {
               <TableCell>
                 <Input
                   errorMessage={productQuantity ? "" : "заполните поле"}
-                  isInvalid={!productQuantity}
+                  isInvalid={buttonClicked && !productQuantity}
                   onChange={
                     (event) => {
                       updateList(product.id, event.target.value)
@@ -190,12 +194,12 @@ export const OrderForm = () => {
           label="Дата оплаты"
           value={dateOfPayment}
           errorMessage={dateOfPayment ? "" : "заполните поле"}
-          isInvalid={!dateOfPayment}
+          isInvalid={ buttonClicked && !dateOfPayment}
           onChange={(e) => handleInputChange(e, setDateOfPayment)}
         />
         <Select
           errorMessage={formOfPayment ? "" : "заполните поле"}
-          isInvalid={!formOfPayment}
+          isInvalid={ buttonClicked && !formOfPayment}
           label="Форма оплаты"
           className="max-w-[18%]"
           value={formOfPayment}
@@ -209,7 +213,7 @@ export const OrderForm = () => {
         </Select>
         <Select
           errorMessage={area ? "" : "заполните поле"}
-          isInvalid={!area}
+          isInvalid={buttonClicked && !area}
           label="Площадка"
           className="max-w-[18%]"
           value={area}
@@ -223,7 +227,7 @@ export const OrderForm = () => {
         </Select>
         <Input
           errorMessage={productionTime ? "" : "заполните поле"}
-          isInvalid={!productionTime}
+          isInvalid={buttonClicked && !productionTime}
           type="date"
           clearable
           bordered
@@ -235,7 +239,7 @@ export const OrderForm = () => {
         />
         <Select
           errorMessage={status ? "" : "заполните поле"}
-          isInvalid={!status}
+          isInvalid={ buttonClicked && !status}
           label="Статус"
           className="max-w-[18%]"
           value={status}
