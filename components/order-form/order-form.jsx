@@ -63,7 +63,7 @@ const ORDER_FORM_INITIAL_STATE = {
 
 
 const FORM_VALIDATION = {
-  city: v => v.length > 1 && /\w/.test(v),
+  city: v => v.length > 1 && /[a-zA-Zа-яА-Я]/.test(v),
   organization: Boolean,
   dateOfPayment: Boolean,
   formOfPayment: Boolean,
@@ -83,7 +83,7 @@ const FORM_ERRORS = {
 };
 
 
-export const OrderForm = (props) => {
+export const OrderForm = () => {
 
   const [form, setForm] = useState(ORDER_FORM_INITIAL_STATE);
   const [errors, setErrors] = useState({});
@@ -115,16 +115,12 @@ export const OrderForm = (props) => {
 
     if (isFormValid) {
       console.log('Form is Valid');
-/*      const newOrder = form;
+      const newOrder = { ...form, products: list };
       console.log('созданный массив', newOrder)
       setOrders([...orders, newOrder]);
       closeHandler();
       // props.onOrderCreated(newOrder);
       createOrder(newOrder);
-      setButtonClicked(true);*/
-    } else {
-      console.log('Form NOT Valid');
-
     }
   };
 
@@ -141,6 +137,10 @@ export const OrderForm = (props) => {
     setList(newList)
   }
 
+  const removeList = (id) => {
+    const newList = list.filter((item) => item.id !== id);
+    setList(newList)
+  }
 
 
   console.log('list23', list)
@@ -154,6 +154,10 @@ export const OrderForm = (props) => {
     setForm({
       ...form,
       [event.target.name]: event.target.value
+    })
+    setErrors({
+      ...errors,
+      [event.target.name]: '',
     })
   }
 
@@ -175,24 +179,17 @@ export const OrderForm = (props) => {
   console.log('errors23', errors);
 
   const validateForm = () => {
+    let newErrors = {};
     for (let key in form) {
       if (FORM_VALIDATION[key]) {
         if (!FORM_VALIDATION[key](form[key])) {
-          setErrors({
-            ...errors,
-            [key]: FORM_ERRORS[key]
-          })
-          return false;
+          newErrors[key] = FORM_ERRORS[key]
         }
       }
     }
-    return true
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0
   }
-
-  const a = {
-    b: 'asd'
-  }
-  console.log(a.asdasd);
 
   return (
     <ModalBody>
@@ -208,8 +205,8 @@ export const OrderForm = (props) => {
         />
         <Input
           type="text"
-          errorMessage={form.organization ? "" : "заполните поле"}
-          isInvalid={buttonClicked && !form.organization}
+          errorMessage={errors.organization ? FORM_ERRORS.organization : ''}
+          isInvalid={Boolean(errors.organization)}
           label="Организация"
           name="organization"
           value={form.organization}
@@ -223,6 +220,7 @@ export const OrderForm = (props) => {
           <TableColumn>Количество</TableColumn>
           <TableColumn>Цена</TableColumn>
           <TableColumn>Сумма</TableColumn>
+          <TableColumn />
         </TableHeader>
         <TableBody>
           {list.map((product) => (
@@ -232,6 +230,7 @@ export const OrderForm = (props) => {
               </TableCell>
               <TableCell>
                 <Input
+                  placeholder="Заполните поле"
                   errorMessage={productQuantity ? "" : "заполните поле"}
                   isInvalid={buttonClicked && !productQuantity}
                   onChange={
@@ -244,10 +243,14 @@ export const OrderForm = (props) => {
               </TableCell>
               <TableCell>
                 <Input
-                  value={product.price} />
+                  label={product.price}
+                />
               </TableCell>
               <TableCell>
                 {product.sum}
+              </TableCell>
+              <TableCell>
+                <button onClick={()=>{removeList(product.id)}}>X</button>
               </TableCell>
             </TableRow>
           ))}
@@ -263,13 +266,13 @@ export const OrderForm = (props) => {
           label="Дата оплаты"
           name="dateOfPayment"
           value={form.dateOfPayment}
-          errorMessage={dateOfPayment ? "" : "заполните поле"}
-          isInvalid={ buttonClicked && !dateOfPayment}
+          errorMessage={errors.dateOfPayment ? FORM_ERRORS.dateOfPayment : ''}
+          isInvalid={Boolean(errors.dateOfPayment)}
           onChange={handleFormChange}
         />
         <Select
-          errorMessage={form.formOfPayment ? "" : "заполните поле"}
-          isInvalid={ buttonClicked && !form.formOfPayment}
+          errorMessage={errors.formOfPayment ? FORM_ERRORS.formOfPayment : ''}
+          isInvalid={Boolean(errors.formOfPayment)}
           label="Форма оплаты"
           className="max-w-[18%]"
           value={form.formOfPayment}
@@ -283,8 +286,8 @@ export const OrderForm = (props) => {
           ))}
         </Select>
         <Select
-          errorMessage={form.area ? "" : "заполните поле"}
-          isInvalid={buttonClicked && !form.area}
+          errorMessage={errors.area ? FORM_ERRORS.area : ''}
+          isInvalid={Boolean(errors.area)}
           label="Площадка"
           className="max-w-[18%]"
           value={form.area}
@@ -298,8 +301,8 @@ export const OrderForm = (props) => {
           ))}
         </Select>
         <Input
-          errorMessage={productionTime ? "" : "заполните поле"}
-          isInvalid={buttonClicked && !productionTime}
+          errorMessage={errors.productionTime ? FORM_ERRORS.productionTime : ''}
+          isInvalid={Boolean(errors.productionTime)}
           type="date"
           clearable
           bordered
@@ -311,8 +314,8 @@ export const OrderForm = (props) => {
           onChange={handleFormChange}
         />
         <Select
-          errorMessage={form.status ? "" : "заполните поле"}
-          isInvalid={ buttonClicked && !form.status}
+          errorMessage={errors.status ? FORM_ERRORS.status : ''}
+          isInvalid={Boolean(errors.status)}
           label="Статус"
           className="max-w-[18%]"
           value={form.status}
