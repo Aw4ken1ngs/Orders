@@ -32,7 +32,7 @@ export const AutoSuggest = ({ onProductSelected, items}) => {
         label="Поиск номенклатуры"
       />
       {inputState.length > 2 && filteredProducts.length > 0 && (
-        <Listbox className={`${styles.list} bg-secondary-400`}>
+        <Listbox className={`${styles.list} bg-default-500`}>
           {filteredProducts.map((product) => (
             <ListboxItem key={product.id} onClick={() => onClick(product)}>
               {product.name}

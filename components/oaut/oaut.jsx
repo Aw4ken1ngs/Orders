@@ -6,7 +6,7 @@ import { createOrder } from '@/services/set-data-google-sheets-api';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { AuthContext } from '@/contexts/auth-context';
 import Skeleton from '../skeleton/skeleton';
-// import { App } from '../skeleton/skeleton';
+import { fetchOrders } from "@/services/fetch-order";
 
 let tokenClient = null;
 let client = null;
@@ -132,35 +132,33 @@ export const Oaut = (props) => {
     setGapiInited(true);
     maybeEnableButtons();
   }
-
-  const fetchOrders = async () => {
-    try {
-      console.log('fetchOrders23----------')
-      const accessToken = localStorage.getItem('access_token');
-      if (!accessToken) {
-        console.error('Access token is missing.');
-        return;
-      }
+//  for googlesheets
+  // const fetchOrders = async () => {
+  //   try {
+  //     console.log('fetchOrders23----------')
+  //     const accessToken = localStorage.getItem('access_token');
+  //     if (!accessToken) {
+  //       console.error('Access token is missing.');
+  //       return;
+  //     }
   
-      gapi.client.setToken({ access_token: accessToken })
+  //     gapi.client.setToken({ access_token: accessToken })
   
-      const response = await gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: '1UXtPgQQASZE4D9pkxQxJPkLkSghtbJWi5EiVmOB5M9E',
-        range: "'Долги по заказам'!A2:K",
-      });
+  //     const response = await gapi.client.sheets.spreadsheets.values.get({
+  //       spreadsheetId: '1UXtPgQQASZE4D9pkxQxJPkLkSghtbJWi5EiVmOB5M9E',
+  //       range: "'Долги по заказам'!A2:K",
+  //     });
 
-      return response;
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-    }
-  }
+  //     return response;
+  //   } catch (error) {
+  //     console.error('Error fetching orders:', error);
+  //   }
+  // }
 
   return (
     <div className={styles.container}>
       <ButtonGroup>
-        <Button color='primary' onClick={fetchOrders}>Обновить</Button>
-        {/* {(authorizeButton && !isUserAuthorized) && <Button color='primary' onClick={signIn}>Авторизироваться</Button>} */}
-        {/* <Button color='primary' onClick={handleSignoutClick}>Выйти</Button> */}
+        <Button color='primary' onClick={fetchOrders()}>Обновить</Button>
         <Button color='primary' onClick={signIn}>войти </Button>
         <pre id="content" style={{ whiteSpace: 'pre-wrap' }}></pre>
       </ButtonGroup>

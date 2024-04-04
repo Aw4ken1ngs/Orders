@@ -4,7 +4,7 @@ import styles from "./skeleton.module.css";
 
 export default function Skeleton() {
   return (
-    <div className="container">
+    <div className={styles.container}>
       <CircularProgress label="Loading..." />
     </div>
   );

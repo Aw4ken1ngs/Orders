@@ -4,5 +4,7 @@
 
 .list {
     position: absolute;
-    z-index: 10;
+    z-index: 100;
+    color: white;
+    border-radius: 10px;
 }

@@ -17,7 +17,7 @@ export default function Home() {
     <>
       <ToolBar onOrderCreated={onOrderCreated} />
       <Oaut newOrder={newOrder}>
-        <OrdersList />
+        <OrdersList/>
       </Oaut>
     </>
   )

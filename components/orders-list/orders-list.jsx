@@ -8,11 +8,14 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 import { FIRE_BASE } from "@/constants/config";
 import { useStore } from "@/store";
+import { fetchOrders } from "@/services/fetch-order";
+
 
 
 export const OrdersList = () => {
 
   const { orders, setOrders } = useStore();
+  
   // const [orders, setOrders] = useState([]);
 
   // const fetchOrders = async () => {
@@ -37,42 +40,29 @@ export const OrdersList = () => {
   //     }, 5)
   // }, []);
   useEffect(() => {
-    fetchOrders1()
-  }, [])
-
-  const fetchOrders1 = async () => {
-    const firebaseApp = initializeApp(FIRE_BASE);
-    const db = getFirestore(firebaseApp);
-    const ordersCollection = collection(db, "orders");
-    const querySnapshot = await getDocs(ordersCollection);
-    console.log(ordersCollection, 'ordersCollection23')
-    const ordersData = querySnapshot.docs.map((doc) => doc.data());
-    setOrders(ordersData);
-  };
+    const fetchData = async () => {
+      const data = await fetchOrders();
+      setOrders(data);
+    };
+    fetchData();
+  }, []);
+  
+  // const fetchOrders1 = async () => {
+  //   const firebaseApp = initializeApp(FIRE_BASE);
+  //   const db = getFirestore(firebaseApp);
+  //   const ordersCollection = collection(db, "orders");
+  //   const querySnapshot = await getDocs(ordersCollection);
+  //   console.log(ordersCollection, 'ordersCollection23')
+  //   const ordersData = querySnapshot.docs.map((doc) => doc.data());
+  //   setOrders(ordersData);
+  // };
 
 
   return (
     <div className={`${styles.container} gap-4 grid grid-cols-2 sm:grid-cols-3`}>
-     
       {orders.map((OrderItem, index) => {
         return <OrderCard key={index} OrderItem={OrderItem} />;
       })}
-        <Button onPress={onOpen} color="default">Создать заказ</Button>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        placement="top-center"
-        size="3xl"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Создание заказа</ModalHeader>
-                <OrderForm />
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </div>
   )
 }

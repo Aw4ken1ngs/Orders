@@ -1,10 +1,51 @@
-import React from "react";
-import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
+import React, { useState } from "react";
+import { Card, CardHeader, CardBody, CardFooter, Divider, Image, Button } from "@nextui-org/react";
+import { useStore } from "@/store";
+import { removeOrder } from "@/services/order-remove";
+import { fetchOrders } from "@/services/fetch-order";
+import { DeleteIcon } from "@/images/icon/delete-icon";
+import { SettingsIcon } from "@/images/icon/settings-icon";
+import styles from './order-card.module.css';
 
 export const OrderCard = (props) => {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  const openDeleteConfirmation = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const closeDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+  };
   const { OrderItem } = props;
+  const { setOpenOrderModal, setSelectedOrder, setOrders } = useStore();
+
+  const onRemoveOrder = () => {
+    removeOrder(OrderItem.id).then(async () => {
+      const data = await fetchOrders();
+      console.log(data, 'data4567')
+      setOrders(data);
+      document.dispatchEvent(new CustomEvent('order:removed'))
+      setShowDeleteConfirmation(false);
+    });
+  }
+  console.log(OrderItem, 'OrderItem456')
+  const onEditOrder = () => {
+    setOpenOrderModal(true)
+    setSelectedOrder(OrderItem)
+  }
+
   return <Card key={props.number} className="max-w-[350px] min-w-[250px]">
-    <CardHeader className="flex gap-3">
+    {showDeleteConfirmation && (
+      <div className={styles.deleteConfirmation}>
+        <p className={styles.deleteConfirmation_title}>Удалить этот заказ ?</p>
+        <div className={styles.deleteConfirmation_buttons}>
+          <Button onClick={onRemoveOrder}>Да</Button>
+          <Button onClick={closeDeleteConfirmation}>Нет</Button>
+        </div>
+      </div>
+    )}
+    <CardHeader className="flex gap-3 ">
       <Image
         alt="nextui logo"
         height={40}
@@ -15,6 +56,14 @@ export const OrderCard = (props) => {
       <div className="flex flex-col">
         <p className="text-md">Заказ: {OrderItem.city}</p>
         <p className="text-small text-default-500">{OrderItem.organization}</p>
+      </div>
+      <div className={styles.buttons}>
+        <Button isIconOnly aria-label="Редактировать" color="none" onClick={onEditOrder}>
+          <SettingsIcon />
+        </Button>
+        <Button isIconOnly aria-label="Удалить" color="none" onClick={openDeleteConfirmation}>
+          <DeleteIcon />
+        </Button>
       </div>
     </CardHeader>
     <Divider />
