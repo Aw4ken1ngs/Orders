@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useMemo, createContext, useContext } from 'react';
 import { Button, ButtonGroup } from "@nextui-org/react";
+import { AuthContext } from '@/contexts/auth-context';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 export const SingIn = () => {
+  const { provider, auth } = useContext(AuthContext);
   const signIn = () => {
     console.log('signIn');
     signInWithPopup(auth, provider)

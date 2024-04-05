@@ -1,7 +1,8 @@
 "use client"
 import React from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button} from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
 import { ToolBar } from "../toolbar/toolbar";
+import { SingIn } from "../sign-in/sign-in";
 
 
 export function Navigation() {
@@ -10,7 +11,7 @@ export function Navigation() {
       <NavbarBrand>
         <p className="font-bold text-inherit">ACME</p>
       </NavbarBrand>
-      <ToolBar/>
+      <ToolBar />
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <Link color="foreground" href="#">
@@ -33,9 +34,7 @@ export function Navigation() {
           <Link href="#">Login</Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
+          <SingIn />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

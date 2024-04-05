@@ -42,8 +42,8 @@ export const Oaut = (props) => {
   }, [accessToken])
   
   
-   const { provider, auth } = useContext(AuthContext);
-   console.log(provider, 'provider----------------------' )
+   
+ 
     // const signIn = () => {
     //   console.log('signIn');
     //   signInWithPopup(auth, provider)
