@@ -1,23 +1,16 @@
 'use client'
 import { Oaut } from '@/components/oaut/oaut';
 import { OrdersList } from '@/components/orders-list/orders-list';
-import React, { useState } from 'react';
-import { ToolBar } from '@/components/toolbar/toolbar';
+import React from 'react';
+
 
 
 
 export default function Home() {
 
-  const [newOrder, setNewOrder] = useState(null);
-
-  const onOrderCreated = (createdOrder) => {
-    console.log('Created order', createdOrder);
-    setNewOrder(createdOrder);
-  }
   return (
     <>
-      <ToolBar onOrderCreated={onOrderCreated} />
-      <Oaut newOrder={newOrder}>
+      <Oaut >
         <OrdersList />
       </Oaut>
     </>

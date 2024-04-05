@@ -6,11 +6,6 @@ import Successfully from "../successfully/successfully";
 import { useEffect, useState } from "react";
 import { Oaut } from "../oaut/oaut";
 
-
-
-
-
-
 export const ToolBar = (props) => {
 
 const { isOpen: isSuccessfullyOpen, onOpen, onOpenChange } = useDisclosure();
@@ -25,10 +20,12 @@ onOpen()
 }
 
 return (
-  <div className={styles.container}>
+  <NavbarContent>
       <Successfully isOpen={isSuccessfullyOpen} onOpenChange={onOpenChange} status={status}/>
+      <NavbarItem>
       <OrderForm onOrderStatusUpdate={onOrderStatusUpdate}/>
-    </div >
+      </NavbarItem>
+    </NavbarContent>
   );
 }
   // useEffect(() => {

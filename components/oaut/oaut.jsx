@@ -44,32 +44,32 @@ export const Oaut = (props) => {
   
    const { provider, auth } = useContext(AuthContext);
    console.log(provider, 'provider----------------------' )
-    const signIn = () => {
-      console.log('signIn');
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential.accessToken;
-          localStorage.setItem('access_token', token);
-          console.log('credential', credential);
-          // The signed-in user info.
-          const user = result.user;
-          console.log('result', result);
-          // IdP data available using getAdditionalUserInfo(result)
-          // ...
-        }).catch((error) => {
-          // Handle Errors here.
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log('errorMessage', errorMessage);
-          // The email of the user's account used.
-          const email = error.customData.email;
-          // The AuthCredential type that was used.
-          const credential = GoogleAuthProvider.credentialFromError(error);
-          // ...
-        });
-    }
+    // const signIn = () => {
+    //   console.log('signIn');
+    //   signInWithPopup(auth, provider)
+    //     .then((result) => {
+    //       // This gives you a Google Access Token. You can use it to access the Google API.
+    //       const credential = GoogleAuthProvider.credentialFromResult(result);
+    //       const token = credential.accessToken;
+    //       localStorage.setItem('access_token', token);
+    //       console.log('credential', credential);
+    //       // The signed-in user info.
+    //       const user = result.user;
+    //       console.log('result', result);
+    //       // IdP data available using getAdditionalUserInfo(result)
+    //       // ...
+    //     }).catch((error) => {
+    //       // Handle Errors here.
+    //       const errorCode = error.code;
+    //       const errorMessage = error.message;
+    //       console.log('errorMessage', errorMessage);
+    //       // The email of the user's account used.
+    //       const email = error.customData.email;
+    //       // The AuthCredential type that was used.
+    //       const credential = GoogleAuthProvider.credentialFromError(error);
+    //       // ...
+    //     });
+    // }
   
   // const handleSignoutClick = () => {
   //   const token = gapi.client.getToken();
@@ -158,8 +158,8 @@ export const Oaut = (props) => {
   return (
     <div className={styles.container}>
       <ButtonGroup>
-        <Button color='primary' onClick={fetchOrders()}>Обновить</Button>
-        <Button color='primary' onClick={signIn}>войти </Button>
+        {/* <Button color='primary' onClick={fetchOrders()}>Обновить</Button> */}
+        {/* <Button color='primary' onClick={signIn}>войти </Button> */}
         <pre id="content" style={{ whiteSpace: 'pre-wrap' }}></pre>
       </ButtonGroup>
       {gapiInited && gisInited ? props.children : <Skeleton/>}
