@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { ToolBar } from '@/components/toolbar/toolbar';
 
 
+
 export default function Home() {
 
   const [newOrder, setNewOrder] = useState(null);
@@ -17,7 +18,7 @@ export default function Home() {
     <>
       <ToolBar onOrderCreated={onOrderCreated} />
       <Oaut newOrder={newOrder}>
-        <OrdersList/>
+        <OrdersList />
       </Oaut>
     </>
   )

@@ -320,7 +320,7 @@ export const OrderForm = ({ onOrderStatusUpdate }) => {
                                 handleInputChange(event, setProductQuantity)
                               }
                             }
-                            value={product.quantity} />
+                            value={product.quantity !== 0 ? product.quantity : ""} />
                         </TableCell>
                         <TableCell>
                           <Input
