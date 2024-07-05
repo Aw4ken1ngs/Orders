@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { mapOrders } from "@/utils/utils";
 import styles from './order-list.module.css';
 import { OrderCard } from "../order-card/order-card";
-import { fetchRetry } from "@/utils/fetch-retry";
-import { getRefreshToken } from "@/services/get-refresh-token";
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
-import { FIRE_BASE } from "@/constants/config";
 import { useStore } from "@/store";
 import { fetchOrders } from "@/services/fetch-order";
 

@@ -1,15 +1,16 @@
-import { Modal, ModalContent, ModalHeader, Button, useDisclosure, Navbar, NavbarBrand, NavbarContent, NavbarItem, Link} from "@nextui-org/react";
-import styles from './ToolBar.module.css';
+import { useDisclosure, NavbarContent, NavbarItem} from "@nextui-org/react";
 import { OrderForm } from "../order-form/order-form";
-import { useStore } from "@/store";
 import Successfully from "../successfully/successfully";
 import { useEffect, useState } from "react";
-import { Oaut } from "../oaut/oaut";
+import { useStore } from "@/store";
+
+
 
 export const ToolBar = (props) => {
 
 const { isOpen: isSuccessfullyOpen, onOpen, onOpenChange } = useDisclosure();
 const [status, setStatus] = useState('');
+const { userData } = useStore();
 
 useEffect(()=>{
 document.addEventListener('order:removed', ()=>{onOrderStatusUpdate('removed')})
@@ -18,12 +19,13 @@ const onOrderStatusUpdate = (orderStatus) => {
 setStatus(orderStatus)
 onOpen()
 }
+console.log(userData, 'ggggg')
 
 return (
   <NavbarContent>
       <Successfully isOpen={isSuccessfullyOpen} onOpenChange={onOpenChange} status={status}/>
       <NavbarItem>
-      <OrderForm onOrderStatusUpdate={onOrderStatusUpdate}/>
+     {userData?.userData.role === 'admin' ? <OrderForm onOrderStatusUpdate={onOrderStatusUpdate}/> : null}
       </NavbarItem>
     </NavbarContent>
   );

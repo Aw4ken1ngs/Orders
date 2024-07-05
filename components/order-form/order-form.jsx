@@ -262,7 +262,7 @@ export const OrderForm = ({ onOrderStatusUpdate }) => {
 
   return (
     <>
-      <Button onPress={onOpen} color="default">Создать заказ</Button>
+      <Button variant="light" onPress={onOpen} color="default">Создать заказ</Button>
       <Modal
         isOpen={showOrderModal}
         onOpenChange={onOpenChange}

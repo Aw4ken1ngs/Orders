@@ -7,6 +7,8 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { AuthContext } from '@/contexts/auth-context';
 import Skeleton from '../skeleton/skeleton';
 import { fetchOrders } from "@/services/fetch-order";
+import { useStore } from "@/store";
+import {apiUser} from "@/services/user";
 
 let tokenClient = null;
 let client = null;
@@ -23,7 +25,28 @@ export const Oaut = (props) => {
   const [accessToken, setAccessToken] = useState('');
   const [gapiInited, setGapiInited] = useState(false);
   const [gisInited, setGisInited] = useState(false);
-  
+  const { provider, auth } = useContext(AuthContext);
+  const { userData , setUserData } = useStore();
+
+
+  async function fetchUserData(id) {
+    try {
+      console.log('1111')
+      const userData = await apiUser(id);
+      console.log(userData, 'userData12')
+      setUserData(userData);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  }
+
+// TODO fix currentUser next time
+  useEffect(()=>{
+    if (auth.currentUser !== null){
+      fetchUserData(auth.currentUser.uid)
+    }
+  },[auth,gapiInited,gisInited]);
+
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     setAccessToken(token);
@@ -36,6 +59,9 @@ export const Oaut = (props) => {
       console.log('jsdfsafdlksajfsadjflksadjflkdsajflksadjflksadjflksadfslkdfjlsajflsajfladsjfldsafjlsadjfladsjfldsak')
     }
   }, [props.newOrder]);
+  
+
+
   
   const isUserAuthorized = useMemo(() => {
     return Boolean(accessToken);
